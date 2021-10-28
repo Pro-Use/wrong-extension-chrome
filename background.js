@@ -3,7 +3,7 @@ var popups = [];
 // Clear Window cache + create alarms on install
 chrome.runtime.onInstalled.addListener(function () {
     chrome.storage.local.set({paused: false});
-    create_alarms();
+    create_alarms(true);
     update_icon_text();
 });
 
@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(function () {
 chrome.runtime.onStartup.addListener(function () {
     chrome.storage.local.get(['paused'], function(result) {
         if (result.paused === false) {
-            create_alarms();
+            create_alarms(true);
             update_icon_text();
         }
     });
@@ -21,7 +21,7 @@ chrome.runtime.onStartup.addListener(function () {
 chrome.idle.onStateChanged.addListener(function() {
     chrome.storage.local.get(['paused'], function(result) {
         if (result.paused === false) {
-            create_alarms(); 
+            create_alarms(true); 
         }
     });
 });
@@ -212,8 +212,9 @@ arebyteWindow = async() => {
 };
 
 
-var create_alarms = () => {
+var create_alarms = (force=false) => {
     // works
+    console.log("force=" + force);
     fetch('https://api-arebyte.a2hosted.com/invites.json', {mode: 'cors'})
     .then(
       function(response) {
@@ -228,7 +229,7 @@ var create_alarms = () => {
             var today = new Date().getDay();
             console.log(result['selfUpdated']);
             // has popup data changed or are alarms from yesterday?
-            if(result['lastUpdate'] !== data.lastUpdate || result['selfUpdated'] !== today) {
+            if(result['lastUpdate'] !== data.lastUpdate || result['selfUpdated'] !== today || force) {
                 chrome.storage.local.clear();
                 chrome.storage.local.set({paused: result['paused']});
                 chrome.storage.local.set({lastUpdate: data.lastUpdate});
@@ -247,6 +248,12 @@ var create_alarms = () => {
 
                     });
                 });
+                // create refresh alarm
+                let alarm_info = {
+                    delayInMinutes:5,
+                    periodInMinutes:5
+                };
+                chrome.alarms.create('refresh', alarm_info);
                 // log
                 chrome.alarms.getAll(function(alarms) {
                     alarms.forEach(function(alarm) {
@@ -292,25 +299,29 @@ var create_alarm = (hour, min, id) => {
 };
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
-    chrome.storage.local.get('paused', function(result){
-        console.log(result);
-        if (result['paused'] === null || result['paused'] === false) {
-            console.log("Triggered:"+alarm.name);
-            alarm_offset = Date.now() - alarm.scheduledTime;
-            console.log(alarm_offset);
-            if (alarm_offset < 66000) {
-                chrome.storage.local.get([alarm.name], function(result) {
-                    popupWindow(result[alarm.name]);
-                });
-                update_icon_text();
-                
-            } else {
-                console.log("Missed " + alarm.name);
-                update_icon_text();
+    if (alarm.name == 'refresh') {
+        console.log('refreshing');
+        create_alarms();
+    } else {
+        chrome.storage.local.get('paused', function(result){
+            console.log(result);
+            if (result['paused'] === null || result['paused'] === false) {
+                console.log("Triggered:"+alarm.name);
+                alarm_offset = Date.now() - alarm.scheduledTime;
+                console.log(alarm_offset);
+                if (alarm_offset < 66000) {
+                    chrome.storage.local.get([alarm.name], function(result) {
+                        popupWindow(result[alarm.name]);
+                    });
+                    update_icon_text();
+                    
+                } else {
+                    console.log("Missed " + alarm.name);
+                    update_icon_text();
+                }
             }
-        }
-    });
-    
+        });
+    }
 });
 
 var update_icon_text = () => {

@@ -144,7 +144,7 @@ var next_ts = null;
 chrome.alarms.getAll(function (alarms) {
     alarm_times = [];
     alarms.forEach(function(alarm) {
-        if (alarm.name !== "countdown" && alarm.name !== "pv" && alarm.name !== "talk") {
+        if (alarm.name !== "refresh") {
             alarm_times.push(alarm.scheduledTime);
         }
     });
