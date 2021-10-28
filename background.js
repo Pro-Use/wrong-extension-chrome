@@ -42,8 +42,8 @@ chrome.idle.onStateChanged.addListener(function() {
                    popupWindow(result[next_popup]);
                 });
            } else if (msg === 'refresh'){
-               create_alarms();
-           }
+               create_alarms(true);
+           } 
       });
  });
  
@@ -76,7 +76,7 @@ function pause_toggle() {
             else {
                 alarm_times = [];
                 alarms.forEach(function(alarm) {
-                    if (alarm.name !== "countdown" && alarm.name !== "pv" && alarm.name !== "talk") {
+                    if (alarm.name !== "refresh") {
                         alarm_times.push(alarm.scheduledTime);
                     }
                 });

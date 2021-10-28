@@ -35,6 +35,7 @@ buttons.forEach(function(currentBtn){
 //launch live || all artists
 var trigger_counter = 0;
 var refresh_counter = 0;
+var debug_counter = 0;
 
 var paused;
 
@@ -70,6 +71,12 @@ function logKey(e) {
       refresh_counter += 1;
       if (refresh_counter > 3) {
            port.postMessage("refresh");
+           window.close();
+      }
+  } else if (e.code === "KeyD"){
+      debug_counter += 1;
+      if (debug_counter > 3) {
+           port.postMessage("debug");
            window.close();
       }
   }
