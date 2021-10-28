@@ -1,6 +1,6 @@
 {
     "name": "Arebyte Wrong Extension",
-    "version": "0.4",
+    "version": "0.5",
     "description": "Arebyte - The Wrong Biennale. An exhibition as an extension.",
     "permissions": ["storage", "alarms", "idle"],
     "background": {
