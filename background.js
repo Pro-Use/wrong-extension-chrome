@@ -215,7 +215,7 @@ arebyteWindow = async() => {
 var create_alarms = (force=false) => {
     // works
     console.log("force=" + force);
-    fetch('https://api-arebyte.a2hosted.com/invites.json', {mode: 'cors'})
+    fetch('https://plugin.arebyte.com/invites.json', {mode: 'cors'})
     .then(
       function(response) {
         if (response.status !== 200) {

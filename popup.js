@@ -1,5 +1,5 @@
 // Get about text
-    fetch('https://api-arebyte.a2hosted.com/info.json', {mode: 'cors'})
+    fetch('https://plugin.arebyte.com/info.json', {mode: 'cors'})
     .then(
       function(response) {
         if (response.status !== 200) {
