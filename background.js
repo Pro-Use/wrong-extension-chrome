@@ -43,7 +43,10 @@ chrome.idle.onStateChanged.addListener(function() {
                 });
            } else if (msg === 'refresh'){
                create_alarms(true);
-           } 
+           } else {
+               manual_popup = JSON.parse(msg);
+               openWindow(manual_popup.dims, manual_popup.fullscreen, manual_popup.url)
+           }
       });
  });
  
