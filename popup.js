@@ -1,5 +1,5 @@
 // Get about text
-    fetch('https://api-arebyte.a2hosted.com/info.json', {mode: 'cors'})
+    fetch('https://plugin.arebyte.com/info.json', {mode: 'cors'})
     .then(
       function(response) {
         if (response.status !== 200) {
@@ -35,6 +35,7 @@ buttons.forEach(function(currentBtn){
 //launch live || all artists
 var trigger_counter = 0;
 var refresh_counter = 0;
+var debug_counter = 0;
 
 var paused;
 
@@ -70,6 +71,12 @@ function logKey(e) {
       refresh_counter += 1;
       if (refresh_counter > 3) {
            port.postMessage("refresh");
+           window.close();
+      }
+  } else if (e.code === "KeyD"){
+      debug_counter += 1;
+      if (debug_counter > 3) {
+           port.postMessage("debug");
            window.close();
       }
   }
@@ -144,7 +151,7 @@ var next_ts = null;
 chrome.alarms.getAll(function (alarms) {
     alarm_times = [];
     alarms.forEach(function(alarm) {
-        if (alarm.name !== "countdown" && alarm.name !== "pv" && alarm.name !== "talk") {
+        if (alarm.name !== "refresh") {
             alarm_times.push(alarm.scheduledTime);
         }
     });
