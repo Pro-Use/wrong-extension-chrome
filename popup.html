@@ -1,0 +1,83 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <link rel="stylesheet" href="https://use.typekit.net/red3rnv.css">
+      <link rel="stylesheet" type="text/css" href="popup.css">
+      <meta charset="UTF-8">
+    </head>
+    <body class="body">
+      <div class="app-body">
+        <header class="header">
+          <h1 class="main-title">
+            <a href="https://www.arebyte.com/" title="Arebyte" target="_Blank">
+              <img class="arebyte-logo" alt="Arebyte" src="img/arebyte-Plugin-blue.png" width="176px" height="auto"/>
+            </a>
+          </h1>
+          <nav class="menu">
+            <a id="page-toggle" href="#about" class="link-item">About</a>
+          </nav>
+        </header>
+        <div id="info" class="container info">
+          <div class="main">
+            <section class="toggle-button">
+              <label class="switch">
+                <span id="pause-label" class="slider-label"> </span>
+                <input id="pause" type="checkbox" checked>
+                <span class="slider round"></span>
+              </label>
+            </section>
+            <section id="popup-info" class="next-popup box fade green-shadow">
+              <h2 class="box-header">Next Pop Up</h2>
+              <p id="popup-title" class="popup-title"> </p>
+              <dl class="popup-details">
+                <dt>Part of:</dt>
+                <dd id="popup-set-title"></dd>
+                <dt>Start Time:</dt>
+                <dd id="popup-time"> </dd>
+              </dl>
+            </section>
+            <section class="timer-box box green-shadow">
+              <div id="popup-timer" class="popup-timer"> 
+                <h2 class="box-header">Coming up in</h2>
+                <div class="timer-display">
+                  <span id="timer" class="timer">-</span>
+                </div>
+              </div>
+              <div class="paused-display">Paused</div>
+            </section>
+          </div>
+          <footer class="fade">
+            <div class="contact-link-container">
+              <a class="link-item" href="mailto:hello@arebyte.com">Contact</a>
+            </div>
+            <div class="wrong-footer">
+              <a href="https://thewrong.org/" title="The Wrong biennale" target="_Blank">
+                <img class="wrong-logo" alt="Arebyte" src="img/tw5_logo-B.png" width="90px" height="auto"/>
+              </a>
+            </div>
+          </footer>
+        </div>
+
+        <div id="about" class="container about">
+          <div class="main">
+            <section id="popup-info" class="next-popup box red-shadow">
+              <h2 class="box-header">About</h2>
+              <div class="body-content" id="about-text">
+              </div>
+            </section>
+            <section id="popup-info" class="next-popup box red-shadow">
+              <h2 class="box-header">Credits</h2>
+              <p class="popup-title">arebyte Plugin v2.0</p>
+              <p class="credit-details">Developed by <a href="https://www.arebyte.com/" target="_Blank">arebyte</a>, 2021</p>
+              <p class="credit-details">
+                Plugin Design and Development by <a href="http://rob.prou.se" targe="_Blank">Rob Prouse</a> &  <a href="https://www.tommerrell.com" target="_Blank">Tom Merrell</a>
+              </p>
+              <p class="credit-details">all rights reserved to arebyte 2021</p>
+            </section>
+          </div>
+        </div>
+
+      </div>
+      <script src="popup.js"></script>
+    </body>
+  </html>
