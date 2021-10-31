@@ -1,6 +1,6 @@
 {
     "name": "arebyte Plug in",
-    "version": "1.0",
+    "version": "1.1",
     "description": "arebyte browser extension for The Wrong Biennale 2021/22",
     "permissions": ["storage", "alarms", "idle"],
     "background": {
