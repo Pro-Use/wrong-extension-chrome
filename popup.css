@@ -6,6 +6,7 @@ body, html{
     background: #fff;
     height: 600px;
     width: 380px;
+    color: #0000ff;
   }
   
   *, *:before, *:after {
@@ -52,6 +53,7 @@ header{
 
 .menu{
   text-align: right;
+  color: #0000ff;
 }
 
 
@@ -73,6 +75,14 @@ header{
     transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     overflow-y: scroll;
     background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.main{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .info{
@@ -160,11 +170,11 @@ h1, h2{
 }
 
 .green-shadow{
-  box-shadow: 4px 4px 6px rgba(0,255,0,.7);
+  box-shadow: 4px 4px 6px rgba(0,255,0, 1);
 }
 
 .red-shadow{
-  box-shadow: 4px 4px 4px #FF000080;
+  box-shadow: 4px 4px 4px rgba(255,0,0, .7);
 }
 
 
@@ -212,15 +222,18 @@ h1, h2{
 
 .credit-details{
   font-size: 16px;
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  row-gap: 8px;
-  column-gap: 1em;
   margin: 0;
   padding: 0;
   padding-top: 22px;
   font-weight: 400;
   padding-right: 20px;
+}
+
+dl{
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  row-gap: 8px;
+  column-gap: 1em;
 }
 
 dt{
@@ -238,9 +251,10 @@ p{
 }
 
 .timer-box{
-    height: 118px;
+    min-height: 118px;
     position: relative;
     overflow: hidden;
+    flex: 1;
 }
 
 .popup-timer{
@@ -254,12 +268,15 @@ p{
     transition: top .2s ease-in-out;
 }
 
-.timer{
+.timer-display{
   font-family: 'Major Mono Display', monospace;
   font-size: 45px;
   text-align: center;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 15px 0 15px;
+  height: calc(100% - 30px);
 }
 
 .paused-display{
@@ -324,6 +341,14 @@ footer .link-item{
 }
 
 .link-item:hover{
+  color: #ff00ff;
+}
+
+a, a:link, a:visited{
+  color: inherit;
+}
+
+a:hover, a:active{
   color: #ff00ff;
 }
 
