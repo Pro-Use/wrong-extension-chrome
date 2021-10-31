@@ -122,6 +122,7 @@ function pause_toggle() {
             if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
             else {
               let new_id = newWindow.id;
+              console.log(newWindow);
               resolve(new_id);
             }
           });
@@ -177,10 +178,10 @@ popupWindow = async (popup_json) => {
 
 infoWindow = async (popup_json) => {
     let width = 450;
-    let height = 500;
+    let height = window.screen.availHeight;
     let dims = [
-      (window.screen.availWidth - width) / 2,
-      (window.screen.availHeight - height) / 2,
+      window.screen.availWidth - width,
+      0,
       width,
       height
     ];
