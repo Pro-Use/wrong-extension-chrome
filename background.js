@@ -1,4 +1,5 @@
 var popups = [];
+var queue = [];
 
 // Clear Window cache + create alarms on install
 chrome.runtime.onInstalled.addListener(function () {
@@ -49,6 +50,39 @@ chrome.idle.onStateChanged.addListener(function() {
            }
       });
  });
+ //update window ID store
+ 
+ function updateStorage() {
+    if (!queue.length || updateStorage.running) {
+        return;
+    }
+    updateStorage.running = true;
+    chrome.storage.local.get('window_ids', data => {
+        data.window_ids = [].concat(data.window_ids, queue);
+        queue = [];
+        chrome.storage.local.set(data, () => {
+          updateStorage.running = false;
+          if (queue.length) updateStorage();
+        });
+    });
+}
+
+// Close all
+
+function closeAll() {
+    chrome.storage.local.get('window_ids', data => {
+        console.log(data.window_ids);
+        chrome.windows.getAll(windows => {
+           windows.forEach((window) => {
+               if (data.window_ids.includes(window.id)){
+                   console.log(window.id);
+                   chrome.windows.remove(window.id);
+               }
+           });  
+        });
+    });
+}
+ 
  
  //Pause
 function pause_toggle() {
@@ -173,6 +207,8 @@ popupWindow = async (popup_json) => {
 
     };
     var id = await openWindow(dims, fullscreen, popup_json.url);
+    queue.push(id);
+    updateStorage();
     console.log("opened window with id:"+id);
 };
 
@@ -186,6 +222,8 @@ infoWindow = async (popup_json) => {
       height
     ];
     let id = await openWindow(dims, false, popup_json.info_url);
+    queue.push(id);
+    updateStorage();
 };
 
 prWindow = async (artist) => {
@@ -200,6 +238,8 @@ prWindow = async (artist) => {
     url = "/popups/info/press_release_window.html";
     if (artist) url += "#" + artist;
     let id = await openWindow(dims, false, url);
+    queue.push(id);
+    updateStorage();
 };
 
 arebyteWindow = async() => {
@@ -213,6 +253,8 @@ arebyteWindow = async() => {
     ];
     let url = "https://www.arebyte.com/real-time-constraints";
     let id = await openWindow(dims, false, url);
+    queue.push(id);
+    updateStorage();
 };
 
 
