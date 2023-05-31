@@ -1,5 +1,7 @@
 var popups = [];
 var queue = [];
+// const base_url = "https://plugin.arebyte.com/";
+const base_url = "https://dev.10pm.studio/arebyte-ext/"
 
 // Clear Window cache + create alarms on install
 chrome.runtime.onInstalled.addListener(function () {
@@ -258,10 +260,10 @@ arebyteWindow = async() => {
 };
 
 
-var create_alarms = (force=false) => {
+var create_alarms = (force=false) => {    
     // works
     console.log("force=" + force);
-    fetch('https://plugin.arebyte.com/invites.json', {mode: 'cors'})
+    fetch(base_url+'invites.json', {mode: 'cors'})
     .then(
       function(response) {
         if (response.status !== 200) {

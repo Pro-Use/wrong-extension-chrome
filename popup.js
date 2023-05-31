@@ -1,5 +1,7 @@
 // Get about text
-    fetch('https://plugin.arebyte.com/info.json', {mode: 'cors'})
+    let url = "https://dev.10pm.studio/arebyte-ext/info.json"
+    // let url = 'https://plugin.arebyte.com/info.json'
+    fetch(url, {mode: 'cors'})
     .then(
       function(response) {
         if (response.status !== 200) {
