@@ -45,20 +45,32 @@ var container = document.querySelector(".container");
 
 var body = document.querySelector("body");
 
-var pageToggle = document.querySelector("#page-toggle");
+const navButtons = document.querySelectorAll('.nav-link');
 
-pageToggle.addEventListener('click', function(event){
-    event.preventDefault();
-    if(body.classList.contains("about--open")){
-        body.classList.remove("about--open");
-        pageToggle.href = "#about";
-        pageToggle.innerHTML = "About";
-    }else{
-        body.classList.add("about--open");
-        pageToggle.href = "#about";
-        pageToggle.innerHTML = "Information";
-    }
+const backButtons = document.querySelectorAll('.back-button');
+
+navButtons.forEach(button => {
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      const targetId = event.target.href.split('#')[1];
+      const targetElement = document.getElementById(targetId);
+      targetElement.addEventListener('transitionend', () => {
+        targetElement.querySelector('.back-button').focus();
+      });
+      const targetIdName = `${targetId}--open`;
+      document.body.classList.add(targetIdName);
+    });
   });
+
+  backButtons.forEach(button => {
+    button.addEventListener('click', event => {
+        event.preventDefault();
+      const parentContainer = event.target.closest('.container');
+      const containerId = parentContainer.id;
+      document.body.classList.remove(`${containerId}--open`);
+    });
+  });
+
 
 document.addEventListener('keydown', logKey);
 
