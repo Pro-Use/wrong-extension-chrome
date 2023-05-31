@@ -292,7 +292,8 @@ var create_alarms = (force=false) => {
                        let time = popup.time.split(":");
                        let hour = time[0];
                        let min = time[1];
-                       create_alarm(hour, min, popup.id);
+                       let secs = time[2]
+                       create_alarm(hour, min, secs, popup.id);
 
                     });
                 });
@@ -320,13 +321,13 @@ var create_alarms = (force=false) => {
     .catch(function(err) {
       console.log('Fetch Error :-S', err);
     });
- };
+}
 
 
-var create_alarm = (hour, min, id) => {
+var create_alarm = (hour, min, secs, id) => {
     let now = new Date();
     // Alarm today:
-    now.setHours(hour,min,00);
+    now.setHours(hour,min,secs);
 //    now.setMinutes(now.getMinutes() + times[pos]); // For debug
     // As UTC timestamp:
     new_time = now.getTime();
@@ -348,8 +349,24 @@ var create_alarm = (hour, min, id) => {
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
     if (alarm.name == 'refresh') {
-        console.log('refreshing');
-        create_alarms();
+        // Don't update if there's a popup in the next 2 minutes...
+        chrome.alarms.getAll(function (alarms) {
+            alarms.sort(function(a, b){return a.scheduledTime - b.scheduledTime;});
+            console.log(alarms);
+            let popup_alarms = alarms.filter(alarm => alarm.name != "refresh");
+            next_alarm = popup_alarms[0];
+            // console.log(next_alarm_time);
+            let now = new Date().getTime();
+            if (next_alarm){
+                console.log((next_alarm.scheduledTime - now))
+            }
+            if (next_alarm && (next_alarm.scheduledTime - now) < 120000) {
+                console.log("Next popup in less than 2 mins")
+            } else {
+                console.log('refreshing');
+                create_alarms();
+            }
+        });
     } else {
         chrome.storage.local.get('paused', function(result){
             console.log(result);
