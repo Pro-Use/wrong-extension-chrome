@@ -1,8 +1,11 @@
 const archiveContainer = document.getElementById('archiveContainer');
 const projectContainer = document.getElementById('projectContainer');
 let archiveData;
+let allPopups = {};
 
-fetch('archive.json')
+let archive_url = "https://dev.10pm.studio/arebyte-ext/archive.json"
+    // let url = 'https://plugin.arebyte.com/archive.json'
+fetch(archive_url, {mode: 'cors'})
   .then(response => response.json())
   .then(data => {
     archiveData = data;
@@ -37,7 +40,7 @@ fetch('archive.json')
                 </svg>
             </button>
         </div>
-        <img src="${img}" class="background-image" />
+        <img srcset="${img}" class="background-image" />
       </a>
       `;
       archiveContainer.appendChild(element);
@@ -69,7 +72,7 @@ fetch('archive.json')
       to = to.replace(/-/g, '.');
       var element = document.createElement("div");
       element.innerHTML = `
-        <img src="${img}" class="project-image" />
+        <img srcset="${img}" class="project-image" />
         <div class="project-main padding">
             <div class="project-info-box red-shadow box bg-white">
                 <h3 class="archive-item--title">${title}</h3>
@@ -91,11 +94,13 @@ fetch('archive.json')
       projectContainer.innerHTML = "";
       projectContainer.appendChild(element);
       for (let i = 0; i < popups.length; i++) {
+        allPopups[popups[i].id] = popups[i];
         let popupTitle = popups[i].popup_title;
         let popupTime =  popups[i].popup_time || "HH:MM:SS";
         let popupDate = popups[i].popup_date || "DD.MM.YYYY";
         let button = document.createElement('button');
         button.classList.add('popup-button', 'box', 'bg-white');
+        button.dataset.popupid = popups[i].id;
         button.innerHTML = `
             <span class="button-title">${popupTitle}</span>
             <span class="button-times">${popupDate} – ${popupTime}</span>
@@ -105,6 +110,45 @@ fetch('archive.json')
 
         `;
         document.getElementById('popupContainer').appendChild(button);
+        button.addEventListener("click", function () {
+            // e.preventDefault();
+            let id = this.dataset.popupid;
+            let popup_info = allPopups[id];
+            // console.log(popup_info)
+            // info window
+            let info_height = screen.height;
+            let info_width = 450;
+            let info_top = 0;
+            let info_left = parseInt(screen.width-info_width);
+            let popup_json = JSON.stringify({dims:[info_left,info_top,info_width,info_height], fullscreen:false, url:popup_info.info_url});
+            port.postMessage(popup_json);
+            // popup
+            height = parseInt(popup_info.height);
+            width = parseInt(popup_info.width);
+            dims = []
+            pos_arr = popup_info.position.split("-");
+    //                horizontal
+            if (pos_arr[1] === "left") {
+                left = 0;
+            } else if (pos_arr[1] === "center") {
+                left = parseInt((screen.width-width)/2);
+            } else if (pos_arr[1] === "right"){
+                left = screen.width-width;
+            }
+    //                vertical
+            if (pos_arr[0] === "top"){
+                 popup_top = 0;
+            } else if (pos_arr[0] === "mid") {
+                 popup_top = screen.availHeight - height;
+                 popup_top = parseInt(popup_top / 2);
+            } else if (pos_arr[0] === "bottom"){
+                 popup_top = screen.height-height;
+            }
+            dims.push(left, popup_top, width, height);
+            msg = JSON.stringify({dims:dims, fullscreen:(popup_info.fullscreen == 'true'), url:popup_info.url});
+            // console.log(msg);
+            port.postMessage(msg);
+        });
       }
   }
 
