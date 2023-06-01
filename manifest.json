@@ -14,6 +14,10 @@
       {
         "matches": ["https://plugin.arebyte.com/invites/*"],
         "js": ["launchPopups.js"]
+      },
+      {
+        "matches": ["https://dev.10pm.studio/arebyte-ext/invites/*"],
+        "js": ["launchPopups.js"]
       }
     ],
     "icons": { 
