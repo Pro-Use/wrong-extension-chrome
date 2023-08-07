@@ -308,65 +308,109 @@ const store_history = async (slug) => {
     chrome.storage.local.set({'history': historyCache})
     console.log(historyCache)
 }
-    console.log("force=" + force);
-    fetch(base_url+'invites.json', {mode: 'cors'})
-    .then(
-      function(response) {
-        if (response.status !== 200) {
-          console.log('Looks like there was a problem. Status Code: ' +
-            response.status);
-          return;
-        }
-        // Examine the text in the response
-        response.json().then(function(data) {
-          chrome.storage.local.get(['lastUpdate', 'paused', 'selfUpdated'], function(result) {
-            var today = new Date().getDay();
-            console.log(result['selfUpdated']);
-            // has popup data changed or are alarms from yesterday?
-            if(result['lastUpdate'] !== data.lastUpdate || result['selfUpdated'] !== today || force) {
-                chrome.storage.local.clear();
-                chrome.storage.local.set({paused: result['paused']});
-                chrome.storage.local.set({lastUpdate: data.lastUpdate});
-                chrome.storage.local.set({nextPopup: data.next_popup});
-                chrome.storage.local.set({selfUpdated: today});
-                chrome.alarms.clearAll();
-                data.popups.forEach(function(popupSet){
-                    popupSet.forEach(function(popup){
-                       let sdict = {};
-                       sdict[popup.id] = popup;
-                       chrome.storage.local.set(sdict);
-                       let time = popup.time.split(":");
-                       let hour = time[0];
-                       let min = time[1];
-                       let secs = time[2]
-                       create_alarm(hour, min, secs, popup.id);
+//
 
-                    });
-                });
-                // create refresh alarm
-                let alarm_info = {
-                    delayInMinutes:5,
-                    periodInMinutes:5
-                };
-                chrome.alarms.create('refresh', alarm_info);
-                // log
-                chrome.alarms.getAll(function(alarms) {
-                    alarms.forEach(function(alarm) {
-                       alarm_time = new Date(alarm.scheduledTime);
-                       console.log("Alarm: "+alarm.name+", Time: "+alarm_time); 
-                    });
-                });
-                chrome.storage.local.get(function(storage){
-                    console.log(storage);
-                }); 
-            };
-          });
+var create_alarms = async (force=false, refresh=false) => {  
+    // get existing storage
+    let result = await chrome.storage.local.get(['lastUpdate', 'paused', 'selfUpdated', 'project', 'history'])
+    console.log('result', result)
+    // get popups
+    let project_url
+    if (result.project && result.project.slug && result.project.day && !refresh){
+        project_url = base_url+'invites.json?project='+result.project.slug+'&day='+result.project.day
+    } else  {
+        project_url = base_url+'invites.json'
+    }
+    console.log("force=" + force);
+    let response = await fetch(project_url, {mode: 'cors'})
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' +
+        response.status);
+      return;
+    }
+    // Examine the text in the response
+    let data = await response.json()
+    // Store project data if not there
+    if (! result.project) { // This only triggers for auto-launched projects
+        // return if project has been viewed before
+        if (result.history && result.history.includes(data.project)){
+            console.log('Project has been viewed before, not loading')
+            return
+        } else {
+            store_project(data.project)
+        }
+        
+    }
+    var today = new Date().getDay();
+    console.log(result['selfUpdated']);
+    // has popup data changed or are alarms from yesterday?
+    if(result['lastUpdate'] !== data.lastUpdate || result.selfUpdated !== today || force) {
+        chrome.storage.local.clear();
+        chrome.storage.local.set({paused: result.paused});
+        chrome.storage.local.set({lastUpdate: data.lastUpdate});
+        chrome.storage.local.set({nextPopup: data.next_popup});
+        chrome.storage.local.set({history: result.history})
+        await chrome.storage.local.set({project: result.project})
+        // If new day add day to project storage
+        if (result.selfUpdated && result.selfUpdated !== today) {
+            //Check if it's the last day 
+            if (result.project && (result.project.day + 1) > data.days){
+                console.log('Last day...')
+                await chrome.storage.local.remove('project');
+                store_history(data.project)
+            } else {
+                store_project(null, 1)
+            }
+            await chrome.storage.local.set({selfUpdated: today});
+        } else if (!result.selfUpdated){
+            await chrome.storage.local.set({selfUpdated: today});
+        }
+        // Sort popups by time
+        data.popups.sort((a, b) => a < b);
+        // Is first popup before load time?
+        let first_time = data.popups[0].time.split(":")
+        let first_date = new Date()
+        first_date.setHours(first_time[0], first_time[1], first_time[2])
+        let first_ts = first_date.getTime()
+        let { project } = await chrome.storage.local.get('project')
+        let delay = 0
+        // If so add one day
+        if (project.start && project.start > first_ts){
+            delay = 1
+        }
+        console.log('sorted popups', data.popups)
+        // Create alarms and store popup info
+        chrome.alarms.clearAll();
+        data.popups.forEach( async function(popup){
+           let sdict = {};
+           sdict[popup.id] = popup;
+           chrome.storage.local.set(sdict);
+           let time = popup.time.split(":");
+           let hour = time[0];
+           let min = time[1];
+           let secs = time[2]
+           await create_alarm(hour, min, secs, delay, popup.id);
         });
-      }
-    )
-    .catch(function(err) {
-      console.log('Fetch Error :-S', err);
-    });
+        // log
+        chrome.alarms.getAll(function(alarms) {
+            console.log("popups remaining: " + alarms.length)
+            alarms.forEach(function(alarm) {
+               let alarm_time = new Date(alarm.scheduledTime);
+               console.log("Alarm: "+alarm.name+", Time: "+alarm_time); 
+            });
+        });
+        // create refresh alarm
+        let alarm_info = {
+            delayInMinutes:5,
+            periodInMinutes:5
+        };
+        chrome.alarms.create('refresh', alarm_info);
+        // log
+        chrome.storage.local.get(function(storage){
+            console.log(storage);
+        }); 
+    };
+
 }
 
 
