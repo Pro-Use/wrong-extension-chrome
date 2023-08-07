@@ -432,8 +432,8 @@ var create_alarm =  async (hour, min, secs, delay, id) => {
         let alarm_info = {
             when:new_time
         };
-        chrome.alarms.create(id, alarm_info);
-        console.log("creating alarm for "+id+" at "+new_time);
+        await chrome.alarms.create(id, alarm_info);
+        // console.log("creating alarm for "+id+" at "+new_time);
     };
     
 };
