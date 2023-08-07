@@ -59,9 +59,7 @@ chrome.idle.onStateChanged.addListener(function() {
  chrome.runtime.onConnect.addListener(function(port) {
       port.onMessage.addListener(async function(msg) {
            console.log("message recieved: " + msg);
-           if (msg === "ctrl-link") {
-                arebyteWindow();          
-           } else if (msg === 'pause_toggle'){
+           if (msg === 'pause_toggle'){
                pause_toggle();
            } else if (msg === 'next_popup'){
                var next_popup = await nextPopup();
@@ -72,56 +70,60 @@ chrome.idle.onStateChanged.addListener(function() {
                 });
            } else if (msg === 'refresh'){
                create_alarms(true);
+           } else if (msg === 'close_all'){
+               closeAll();
+           } else if (msg === 'unload') {
+                await chrome.alarms.clearAll()
+                await chrome.storage.local.remove('project')
+                // clear the local cache!
+                Object.getOwnPropertyNames(projectCache).forEach(function (prop) {
+                  delete projectCache[prop];
+                });
+                // console.log(projectCache)
+                create_alarms(true, true);
            } else {
-               manual_popup = JSON.parse(msg);
-               openWindow(manual_popup.dims, manual_popup.fullscreen, manual_popup.url)
+                let trigger = JSON.parse(msg);
+                if (Object.keys(trigger).includes('slug')){
+                    console.log('Loading: '+trigger.slug)
+                    await store_project(trigger.slug, null, )
+                    create_alarms(true);
+                } else {
+                    openWindow(trigger.dims, trigger.fullscreen, trigger.url)
+                }
+               
            }
       });
  });
- //update window ID store
- 
- function updateStorage() {
-    if (!queue.length || updateStorage.running) {
-        return;
-    }
-    updateStorage.running = true;
-    chrome.storage.local.get('window_ids', data => {
-        data.window_ids = [].concat(data.window_ids, queue);
-        queue = [];
-        chrome.storage.local.set(data, () => {
-          updateStorage.running = false;
-          if (queue.length) updateStorage();
-        });
-    });
-}
 
 // Close all
 
-function closeAll() {
-    chrome.storage.local.get('window_ids', data => {
-        console.log(data.window_ids);
-        chrome.windows.getAll(windows => {
-           windows.forEach((window) => {
-               if (data.window_ids.includes(window.id)){
-                   console.log(window.id);
-                   chrome.windows.remove(window.id);
-               }
-           });  
-        });
+async function closeAll() {
+    let tabs = await chrome.storage.local.get('open_tabs')
+    console.log(tabs);
+    let windows = await chrome.windows.getAll()
+    windows.forEach((window) => {
+        if (tabs && tabs.open_tabs.includes(window.id)){
+           chrome.windows.remove(window.id);
+        }
     });
+    chrome.storage.local.set({'open_tabs': []})
 }
  
  
  //Pause
 function pause_toggle() {
-    chrome.storage.local.get(['paused'], function(result) {
-        paused = result.paused;
+    chrome.storage.local.get(['paused'], async function(result) {
+        let paused = result.paused;
+        let today = new Date()
         if (paused === null || paused === false) {
-            chrome.storage.local.set({paused: true});
-            chrome.browserAction.setBadgeText({text:""});
+            chrome.storage.local.set({paused: today.getTime()});
+            chrome.action.setBadgeText({text:"mute"});
             console.log("Paused");
         } else {
-            chrome.storage.local.set({paused: false});
+            // let diff = paused - let cur_ts = new Date().getTime();
+            // let days = Math.floor(86400000 / diff)
+            await chrome.storage.local.set({paused: false, selfUpdated: today.getDay()});
+            chrome.action.setBadgeText({text:""});
             create_alarms();
             update_icon_text();
             console.log("Unpaused");
