@@ -16,7 +16,6 @@
             </h1>
             <nav class="menu">
               <a id="page-toggle" href="#about" class="link-item nav-link">About</a>
-              <a id="page-toggle-archive" href="#archive" class="link-item nav-link">Archive</a>
             </nav>
           </header>
           <div class="main">
@@ -26,6 +25,7 @@
                 <input id="pause" type="checkbox" checked>
                 <span class="slider round"></span>
               </label>
+              <a id="close_all" class="close">Close All Popups</a>
             </section>
             <section id="popup-info" class="next-popup box fade green-shadow">
               <h2 class="box-header">Next Pop Up</h2>
@@ -35,6 +35,8 @@
                 <dd id="popup-set-title"></dd>
                 <dt>Start Time:</dt>
                 <dd id="popup-time"> </dd>
+                <dt>Day:</dt>
+                <dd id="popup-day"> </dd>
               </dl>
             </section>
             <section class="timer-box box green-shadow">
@@ -45,6 +47,15 @@
                 </div>
               </div>
               <div class="paused-display">Paused</div>
+            </section>
+            <section>
+              <div id="archive" >
+                <div class="main">            
+                    <h2 class="box-header">Projects</h2>
+                    <div id="archiveContainer" class="archive-content">
+                    </div>
+                </div>
+              </div>
             </section>
           </div>
           <footer class="fade">
@@ -86,24 +97,6 @@
           </div>
         </div>
 
-
-        <div id="archive" class="container archive" tabindex="-1">
-          <header class="header">
-            <a class="back-button" href="#info">
-              <span class="visuallyhidden">Back</span>
-              <svg width="41" height="22" viewBox="0 0 41 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 11L19 16.7735V5.2265L9 11ZM18 12H32V10H18V12Z" fill="#0500FF"/>
-              </svg>                
-            </a>
-
-          </header>
-          <div class="main">            
-              <h2 class="box-header">Archive</h2>
-              <div id="archiveContainer" class="archive-content">
-              </div>
-          </div>
-        </div>
-
         <div id="project" class="container project no-padding" tabindex="-1">
           <header class="header padding">
             <a class="back-button" href="#archive">
@@ -115,7 +108,6 @@
 
           </header>
           <div class="main">            
-              <h2 class="box-header padding">Archive</h2>
               <div id="projectContainer" class="archive-content">
 
               </div>
