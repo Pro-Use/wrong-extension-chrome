@@ -1,6 +1,6 @@
  console.log('content script loaded')
 
- var port = chrome.extension.connect();
+var port = chrome.runtime.connect();
 
 const buttons = document.getElementsByTagName('input');
 console.log(buttons);
