@@ -251,8 +251,7 @@ const popupWindow = async (popup_json) => {
 
     };
     var id = await openWindow(dims, fullscreen, popup_json.url);
-    queue.push(id);
-    updateStorage();
+    store_tab(id)
     console.log("opened window with id:"+id);
 };
 
