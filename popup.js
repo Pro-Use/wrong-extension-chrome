@@ -171,13 +171,16 @@ close_button.addEventListener('click', (e) => {
     port.postMessage("close_all");
 })
 
+// 
+
 var set_title = document.getElementById('popup-set-title');
 var title = document.getElementById('popup-title');
 var time = document.getElementById('popup-time');
-
+var day = document.getElementById('popup-day');
 var next_ts = null;
 
-chrome.alarms.getAll(function (alarms) {
+
+chrome.alarms.getAll( function (alarms) {
     alarm_times = [];
     alarms.forEach(function(alarm) {
         if (alarm.name !== "refresh") {
@@ -204,6 +207,7 @@ chrome.alarms.getAll(function (alarms) {
                 set_title.innerHTML = next_popup.title;
                 title.innerHTML = next_popup.popup_title;
                 time.innerHTML = next_popup.time;
+                day.innerHTML = next_popup.day;
                 startTimer(next_ts);
         });
     } else {
@@ -213,14 +217,17 @@ chrome.alarms.getAll(function (alarms) {
             if (next_popup === null) {
                 set_title.innerHTML = "No popups currently scheduled...";
             } else {
-                let next_date = next_popup.date.split("-");
                 let next_time = next_popup.time.split(":");
-                next_date = new Date(next_date[0], (next_date[1] - 1), next_date[2], next_time[0], next_time[1]);
+                let next_date = new Date()
+                next_date.setDate(next_date.getDate()+next_popup.diff)
+                next_date.setHours(next_time[0])
+                next_date.setMinutes(next_time[1])
                 next_ts = next_date.getTime();
                 console.log(next_popup.time);
                 set_title.innerHTML = next_popup.title;
                 title.innerHTML = next_popup.popup_title;
                 time.innerHTML = next_popup.time;
+                day.innerHTML = next_popup.day;
                 startTimer(next_ts);
             }
         });
