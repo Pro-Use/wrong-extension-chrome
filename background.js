@@ -1,10 +1,36 @@
-var popups = [];
-var queue = [];
+
+const tabCache = [];
+const projectCache = {};
+const historyCache = []
 // const base_url = "https://plugin.arebyte.com/";
 const base_url = "https://dev.10pm.studio/arebyte-ext/"
+// const base_url = "http://localhost/wrong/"
+
+// init local cache for when service worker reloads
+const initTabCache = chrome.storage.local.get().then((items) => {
+    if(tabCache.length == 0){
+        console.log('tabCache is empty')
+        Object.assign(tabCache, items.open_tabs);
+    }
+});
+
+const initProjectCache = chrome.storage.local.get().then((items) => {
+    console.log('projectCache is empty')
+    if(Object.keys(projectCache).length === 0){
+        Object.assign(projectCache, items.cur_project);
+    }
+});
+
+const initHistoryCache = chrome.storage.local.get().then((items) => {
+    if(historyCache.length === 0){
+        Object.assign(historyCache, items.history);
+    }
+});
 
 // Clear Window cache + create alarms on install
 chrome.runtime.onInstalled.addListener(function () {
+    // Assume no popups reopened on restart... not needed??
+    // chrome.storage.local.set({'open_tabs':[]})
     chrome.storage.local.set({paused: false});
     create_alarms(true);
     update_icon_text();
@@ -30,7 +56,7 @@ chrome.idle.onStateChanged.addListener(function() {
 });
 
 // Popup comms
- chrome.extension.onConnect.addListener(function(port) {
+ chrome.runtime.onConnect.addListener(function(port) {
       port.onMessage.addListener(async function(msg) {
            console.log("message recieved: " + msg);
            if (msg === "ctrl-link") {
