@@ -375,7 +375,7 @@ var create_alarms = async (force=false, refresh=false) => {
         let { project } = await chrome.storage.local.get('project')
         let delay = 0
         // If so add one day
-        if (project.start && project.start > first_ts){
+        if (project && project.start && project.start > first_ts){
             delay = 1
         }
         console.log('sorted popups', data.popups)
