@@ -170,7 +170,7 @@ function pause_toggle() {
  }
  
  function openWindow(dims, fullscreen, url) {
-    optionsDictionary = {url: url, type: "popup"};
+    let optionsDictionary = {url: url, type: "popup"};
     if (fullscreen) {
         optionsDictionary.state = "fullscreen";
     } else {
