@@ -196,14 +196,28 @@ function pause_toggle() {
     });
 }
 
-popupWindow = async (popup_json) => {
+const get_display = async () => {
+    let displayInfo = await chrome.system.display.getInfo()
+    let window_info = {
+        'screen':{
+            'availHeight': displayInfo[0].bounds.height,
+            'availWidth': displayInfo[0].bounds.width
+        }
+    }
+    return window_info
+}
+
+get_display()
+
+const popupWindow = async (popup_json) => {
     infoWindow(popup_json);
     let fullscreen = popup_json.fullscreen === "true";
     if (fullscreen) {
        var dims = []; 
     } else {
-        height = parseInt(popup_json.height);
-        width = parseInt(popup_json.width);
+        let window = await get_display()
+        let height = parseInt(popup_json.height);
+        let width = parseInt(popup_json.width);
         console.log(popup_json.position);
         const pos_arr = popup_json.position.split("-");
         console.log(pos_arr);
@@ -211,20 +225,20 @@ popupWindow = async (popup_json) => {
         if (pos_arr[0] === "top"){
             var top = 0;
         } else if (pos_arr[0] === "mid") {
-            vPosition = (window.screen.availHeight) ? (window.screen.availHeight-height)/2 : 0;
+            let vPosition = (window.screen.availHeight) ? (window.screen.availHeight-height)/2 : 0;
             var top = vPosition;
         } else if (pos_arr[0] === "bottom"){
-            vPosition = window.screen.availHeight-height;
+            let vPosition = window.screen.availHeight-height;
             var top = vPosition;
         }
 //                horizontal
         if (pos_arr[1] === "left") {
             var left = 0;
         } else if (pos_arr[1] === "center") {
-            hPosition = (window.screen.availWidth) ? (window.screen.availWidth-width)/2 : 0;
+            let hPosition = (window.screen.availWidth) ? (window.screen.availWidth-width)/2 : 0;
             var left = hPosition;
         } else if (pos_arr[1] === "right"){
-            hPosition = window.screen.availWidth-width;
+            let hPosition = window.screen.availWidth-width;
             var left = hPosition;
         }
         console.log(width, height, top, left);
