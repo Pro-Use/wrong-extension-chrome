@@ -255,7 +255,8 @@ const popupWindow = async (popup_json) => {
     console.log("opened window with id:"+id);
 };
 
-infoWindow = async (popup_json) => {
+const infoWindow = async (popup_json) => {
+    let window = await get_display()
     let width = 450;
     let height = window.screen.availHeight;
     let dims = [
