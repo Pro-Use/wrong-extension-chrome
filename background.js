@@ -271,10 +271,43 @@ const infoWindow = async (popup_json) => {
 
 //Storage access
 
+const store_tab = async (id) => {
+    await initTabCache;
+    tabCache.push(id)
+    await chrome.storage.local.set({'open_tabs': tabCache})
+    console.log(tabCache)
+}
 
+const store_project = async (slug=null, day=null) =>{
+    await initProjectCache;
+    if (slug) {
+        projectCache.slug = slug
+        let now = new Date()
+        projectCache.start = now.getTime()
+    }
+    if (day) {
+        if (!projectCache.day){
+           projectCache.day = 1 
+        } else {
+            projectCache.day += day
+            if (projectCache.day < 1){
+               projectCache.day = 1 
+            }
+        }
+    } else if (slug && !day) {
+       projectCache.day = 1 
+    }
 
-var create_alarms = (force=false) => {    
-    // works
+    await chrome.storage.local.set({'project': projectCache})
+    console.log(projectCache)
+}
+
+const store_history = async (slug) => {
+    await initHistoryCache;
+    historyCache.push(slug)
+    chrome.storage.local.set({'history': historyCache})
+    console.log(historyCache)
+}
     console.log("force=" + force);
     fetch(base_url+'invites.json', {mode: 'cors'})
     .then(
