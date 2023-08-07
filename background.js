@@ -141,17 +141,17 @@ function pause_toggle() {
           chrome.alarms.getAll(function (alarms) {
             if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
             else {
-                alarm_times = [];
+                let alarm_times = [];
                 alarms.forEach(function(alarm) {
                     if (alarm.name !== "refresh") {
                         alarm_times.push(alarm.scheduledTime);
                     }
                 });
                 alarm_times.sort(function(a, b){return a - b;});
-                next_alarm_time = alarm_times[0];
+                let next_alarm_time = alarm_times[0];
                 console.log(next_alarm_time);
-                next_ts = next_alarm_time;
-                next_popup_name = 'nextPopup';
+                let next_ts = next_alarm_time;
+                let next_popup_name = 'nextPopup';
                 alarms.every(function(alarm) {
                     if (alarm.scheduledTime === next_alarm_time) {
                         next_popup_name = alarm.name;
