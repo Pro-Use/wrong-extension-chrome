@@ -414,13 +414,14 @@ var create_alarms = async (force=false, refresh=false) => {
 }
 
 
-var create_alarm = (hour, min, secs, id) => {
+var create_alarm =  async (hour, min, secs, delay, id) => {
     let now = new Date();
+    now.setDate(now.getDate() + delay)
     // Alarm today:
     now.setHours(hour,min,secs);
 //    now.setMinutes(now.getMinutes() + times[pos]); // For debug
     // As UTC timestamp:
-    new_time = now.getTime();
+    let new_time = now.getTime();
     // Is it in the past? Add 1 day
     if (new_time > Date.now()) {
     // Is it less than a minute? Add a minute
