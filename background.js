@@ -269,36 +269,8 @@ const infoWindow = async (popup_json) => {
     store_tab(id)
 };
 
-prWindow = async (artist) => {
-    let width = 800;
-    let height = window.screen.availHeight - 100;
-    let dims = [
-      (window.screen.availWidth - width) / 2,
-      (window.screen.availHeight - height) / 2,
-      width,
-      height
-    ];
-    url = "/popups/info/press_release_window.html";
-    if (artist) url += "#" + artist;
-    let id = await openWindow(dims, false, url);
-    queue.push(id);
-    updateStorage();
-};
+//Storage access
 
-arebyteWindow = async() => {
-    let width = window.screen.availWidth - 100;
-    let height = window.screen.availHeight - 100;
-    let dims = [
-      (window.screen.availWidth - width) / 2,
-      (window.screen.availHeight - height) / 2,
-      width,
-      height
-    ];
-    let url = "https://www.arebyte.com/real-time-constraints";
-    let id = await openWindow(dims, false, url);
-    queue.push(id);
-    updateStorage();
-};
 
 
 var create_alarms = (force=false) => {    
