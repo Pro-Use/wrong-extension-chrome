@@ -21,7 +21,7 @@
     });
 
 //Background comms
- var port = chrome.extension.connect({
+ var port = chrome.runtime.connect({
       name: "RTC_Comms"
  });
 
@@ -38,6 +38,7 @@ buttons.forEach(function(currentBtn){
 var trigger_counter = 0;
 var refresh_counter = 0;
 var debug_counter = 0;
+var close_counter = 0;
 
 var paused;
 
@@ -91,6 +92,12 @@ function logKey(e) {
       debug_counter += 1;
       if (debug_counter > 3) {
            port.postMessage("debug");
+           window.close();
+      }
+  } else if (e.code === "KeyC"){
+      close_counter += 1;
+      if (close_counter > 3) {
+           port.postMessage("close_all");
            window.close();
       }
   }
@@ -155,6 +162,14 @@ pause_button.addEventListener( 'change', function() {
     }
 });
 
+// close all
+
+const close_button = document.getElementById("close_all")
+
+close_button.addEventListener('click', (e) => {
+    e.preventDefault()
+    port.postMessage("close_all");
+})
 
 var set_title = document.getElementById('popup-set-title');
 var title = document.getElementById('popup-title');
