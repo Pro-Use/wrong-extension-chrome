@@ -4,11 +4,13 @@ let archiveData;
 let allPopups = {};
 
 let archive_url = "https://dev.10pm.studio/arebyte-ext/archive.json"
-    // let url = 'https://plugin.arebyte.com/archive.json'
+// let archive_url = 'https://plugin.arebyte.com/archive.json'
+// let archive_url =  "http://localhost/wrong/archive.json"
 fetch(archive_url, {mode: 'cors'})
   .then(response => response.json())
   .then(data => {
     archiveData = data;
+    console.log(archiveData)
     buildArchive(data);
   })
   .catch(err => console.log(err))
@@ -22,8 +24,6 @@ fetch(archive_url, {mode: 'cors'})
       var from = item.from;
       var img = item.img || "/placeholder.svg";
       from = from.replace(/-/g, '.');
-      var to = item.to;
-      to = to.replace(/-/g, '.');
       var element = document.createElement("div");
       element.innerHTML = `
       <a class="archive-item info-item red-shadow box" href="#project" data-index="${index}">
@@ -31,7 +31,7 @@ fetch(archive_url, {mode: 'cors'})
             <div class="archive-item--text">
                 <h3 class="archive-item--title">${title}</h3>
                 <p class="subhead">Curated by ${curator}</p>
-                <p class="subhead">${from} – ${to}</p>
+                <p class="subhead">Launched ${from}</p>
             </div>
             <button class="archive-item--cta">
                 <span class="button-text">View Project</span> 
@@ -60,7 +60,7 @@ fetch(archive_url, {mode: 'cors'})
     }
   });
 
-  function buildProjectPage(item) {
+  async function buildProjectPage(item) {
     var title = item.title;
       var curator = item.curator;
       var from = item.from;
@@ -68,8 +68,6 @@ fetch(archive_url, {mode: 'cors'})
       var text = item.text;
       var popups = item.popups;
       from = from.replace(/-/g, '.');
-      var to = item.to;
-      to = to.replace(/-/g, '.');
       var element = document.createElement("div");
       element.innerHTML = `
         <img srcset="${img}" class="project-image" />
@@ -77,7 +75,8 @@ fetch(archive_url, {mode: 'cors'})
             <div class="project-info-box red-shadow box bg-white">
                 <h3 class="archive-item--title">${title}</h3>
                 <p class="subhead">Curated by ${curator}</p>
-                <p class="subhead">${from} – ${to}</p>
+                <p class="subhead">Launched ${from}</p>
+                <div id="load-button"></div>
                 <details>
                     <summary> More Info </summary>
                     <div class="project-description">
@@ -91,19 +90,55 @@ fetch(archive_url, {mode: 'cors'})
             </div>
         </div>
       `;
+      // Append load button if not current project
+      let { project } = await chrome.storage.local.get('project');
+      if (project && project.slug != item.project){
+          let load = element.querySelector('#load-button')
+          let project_button = document.createElement('button');
+          project_button.classList.add('project-button', 'box', 'bg-white');
+          project_button.dataset.slug = item.project;
+          project_button.innerHTML = `
+            <span class="button-title">Load '${title}'</span>
+            <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
+            </svg>`;
+          load.appendChild(project_button)
+          project_button.addEventListener("click", function () {
+            let slug = this.dataset.slug;
+            msg = JSON.stringify({ 'slug': slug })
+            port.postMessage(msg);
+            window.close();
+          });
+      // Append unload button if current but not live
+      } else if (project && project.slug == item.project && !item.live){
+          let load = element.querySelector('#load-button')
+          let project_button = document.createElement('button');
+          project_button.classList.add('project-button', 'box', 'bg-white');
+          project_button.innerHTML = `
+            <span class="button-title">Unload '${title}'</span>
+            <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
+            </svg>`;
+          load.appendChild(project_button)
+          project_button.addEventListener("click", function () {
+            port.postMessage('unload');
+            window.close();
+          });
+      }
+      //
       projectContainer.innerHTML = "";
       projectContainer.appendChild(element);
       for (let i = 0; i < popups.length; i++) {
         allPopups[popups[i].id] = popups[i];
         let popupTitle = popups[i].popup_title;
         let popupTime =  popups[i].popup_time || "HH:MM:SS";
-        let popupDate = popups[i].popup_date || "DD.MM.YYYY";
+        let popupDay = popups[i].popup_day || "1";
         let button = document.createElement('button');
         button.classList.add('popup-button', 'box', 'bg-white');
         button.dataset.popupid = popups[i].id;
         button.innerHTML = `
             <span class="button-title">${popupTitle}</span>
-            <span class="button-times">${popupDate} – ${popupTime}</span>
+            <span class="button-times">Day ${popupDay} – ${popupTime}</span>
             <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
             </svg>
