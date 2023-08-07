@@ -445,14 +445,14 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
             alarms.sort(function(a, b){return a.scheduledTime - b.scheduledTime;});
             console.log(alarms);
             let popup_alarms = alarms.filter(alarm => alarm.name != "refresh");
-            next_alarm = popup_alarms[0];
+            let next_alarm = popup_alarms[0];
             // console.log(next_alarm_time);
             let now = new Date().getTime();
             if (next_alarm){
                 console.log((next_alarm.scheduledTime - now))
             }
-            if (next_alarm && (next_alarm.scheduledTime - now) < 120000) {
-                console.log("Next popup in less than 2 mins")
+            if (next_alarm && (next_alarm.scheduledTime - now) < 270000) {
+                console.log("Next popup in less than 4.5 mins")
             } else {
                 console.log('refreshing');
                 create_alarms();
@@ -463,7 +463,7 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
             console.log(result);
             if (result['paused'] === null || result['paused'] === false) {
                 console.log("Triggered:"+alarm.name);
-                alarm_offset = Date.now() - alarm.scheduledTime;
+                let alarm_offset = Date.now() - alarm.scheduledTime;
                 console.log(alarm_offset);
                 if (alarm_offset < 66000) {
                     chrome.storage.local.get([alarm.name], function(result) {
