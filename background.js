@@ -266,8 +266,7 @@ const infoWindow = async (popup_json) => {
       height
     ];
     let id = await openWindow(dims, false, popup_json.info_url);
-    queue.push(id);
-    updateStorage();
+    store_tab(id)
 };
 
 prWindow = async (artist) => {
