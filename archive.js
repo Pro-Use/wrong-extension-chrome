@@ -161,7 +161,7 @@ fetch(archive_url, {mode: 'cors'})
             height = parseInt(popup_info.height);
             width = parseInt(popup_info.width);
             dims = []
-            if (popup_info.fullscreen == 'true'){
+            if (popup_info.fullscreen != 'true'){
                 pos_arr = popup_info.position.split("-");
         //                horizontal
                 if (pos_arr[1] === "left") {
