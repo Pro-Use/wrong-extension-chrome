@@ -205,11 +205,15 @@ b, strong{
     font-style: normal;
 }
 
-h1, h2{
+h1, h2, h3{
     margin: 0;
     padding: 0;
     font-size: 1em;
-    font-weight: normal;
+    font-weight: inherit;
+}
+
+.lowercase{
+  text-transform: initial;
 }
 
 .toggle-button{
@@ -531,40 +535,39 @@ a:hover, a:active{
   /* ARCHIVE */
 
   .archive-content{
-    padding-top: 16px;
     padding-bottom: 16px;
   }
 
   .archive-item{
     display: block;
     text-decoration: none;
-    aspect-ratio: 35/22;
-    background-color: grey;
-    font-weight: 700;
+    padding: 0;
+    /* aspect-ratio: 35/22; */
+    /* background-color: grey; */
+    /* font-weight: 700; */
     line-height: 1.5;
-    position: relative;
+    /* position: relative; */
     overflow: hidden;
   }
 
   .archive-item--info-layer{
-    position: absolute;
+    /* position: absolute;
     top:0;
-    left: 0;
+    left: 0; */
     z-index: 1;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
-    backdrop-filter: blur(10px);
-    padding: 15px;
-    background-color: rgba(0,0,0,.1);
+    /* backdrop-filter: blur(10px); */
+    padding: 10px;
+    /* background-color: rgba(0,0,0,.1); */
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
     pointer-events: none;
   }
 
   .archive-item--text{
     flex: 1;
-    color: white;
     z-index: 1;
     /* text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.75); */
   }
@@ -573,14 +576,21 @@ a:hover, a:active{
     padding: 0;
     margin: 0;
     text-transform: uppercase;
+    line-height: 25px;
+    font-size: 16px;
+    font-weight: bold;
   }
 
   .archive-item p{
     padding: 0;
     margin: 0;
+    line-height: 25px;
+    font-size: 16px;
+    font-weight: bold;
   }
 
   .archive-item--cta{
+    display: none;
     background-color: transparent;
     border: 1px solid #FFFFFF;
     border-radius: 5px;
@@ -610,15 +620,18 @@ a:hover, a:active{
 
 
   .archive-item .background-image{
-    position: absolute;
+    /* position: absolute;
     top:0;
     left:0;
     z-index: 0;
     width: 100%;
-    height: 100%;
+    height: 100%; */
+    aspect-ratio: 35/22;
+    width: 100%;
     object-fit: cover;
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
     pointer-events: none;
+    display: block;
     /* filter: blur(5px); */
   }
 
@@ -628,12 +641,17 @@ a:hover, a:active{
   }
 
   .archive-item:hover .archive-item--info-layer{
-    backdrop-filter: blur(0);
+    /* backdrop-filter: blur(0); */
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
   }
-
+/* 
   .archive-item:hover .archive-item--text{
     filter: blur(3px)
+  } */
+
+  .archive-item:hover{
+    background-color: #0000ff;
+    color: white;
   }
 
 
@@ -665,6 +683,10 @@ a:hover, a:active{
 
   .project-popups{
     padding-top: 30px;
+  }
+
+  .project-popups .box-header{
+    padding-bottom: 1em;
   }
 
   .project-main details{
@@ -738,7 +760,7 @@ a:hover, a:active{
 
   .popup-button svg{
     position: absolute;
-    right: 0;
+    right: 15px;
     top:50%;
     transform: translateY(-50%);
   }
