@@ -62,6 +62,13 @@ header{
     top:0;
 }
 
+.project-header{
+  height: 0;
+  min-height: 0px;
+  padding-bottom: 0;
+  top: 15px;
+}
+
 .menu{
   text-align: right;
   color: #0000ff;
@@ -76,15 +83,15 @@ header{
   border: 1px solid #0000ff;
   border-radius: 5px;
   background-color: white;
-  /* position: fixed; */
-  /* top:15px; */
 }
 
-/* .back-button svg{
-  position: absolute;
-  top:0;
-  left: 0;
-} */
+.back-button:hover{
+  background-color: #0000ff;
+}
+
+.back-button:hover path{
+  fill: white;
+}
 
 .container {
     font-size: 16px;
@@ -101,11 +108,14 @@ header{
     position: absolute;
     top:0;
     left: 0;
-/*    transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);*/
     overflow-y: scroll;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+}
+
+.container.project{
+  padding-top: 0;
 }
 
 .main{
@@ -118,29 +128,39 @@ header{
   z-index: 10;
 }
 
-.about, .archive, .project{
+.sidebar-overlay{
+  visibility: hidden;
+  position: fixed;
+  top: 0;
   left: 100vw;
-  z-index: 1;
-  height: 0;
-  overflow: hidden;
+  z-index: 100;
+  height: 100vh;
+  overflow: auto;
+  transition: 
+    left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    visibility 0ms .3s linear;
 }
 
-.about--open .about, .archive--open .archive, .project--open .project{
+.sidebar-overlay.is-active{
   left: 0;
-  top: 0;
-  height: auto;
-  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;
-
+  visibility: visible;
+  transition: 
+    left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+    visibility 0ms 0ms linear;
 }
 
-.about--open .info, .archive--open .info, .project--open .info{
-  left: -100vw;
-  top: 0;
-/*  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;*/
+.sidebar-overlay::-webkit-scrollbar {
+  width: 5px;
+  padding: 3px;
 }
-
-.project--open .archive{
-  display: none;
+ 
+.sidebar-overlay::-webkit-scrollbar-track {
+  box-shadow: none;
+  background-color: white;
+}
+ 
+.sidebar-overlay::-webkit-scrollbar-thumb {
+  background-color: rgb(0,0,255);
 }
 
 .paused .fade{
@@ -185,11 +205,15 @@ b, strong{
     font-style: normal;
 }
 
-h1, h2{
+h1, h2, h3{
     margin: 0;
     padding: 0;
     font-size: 1em;
-    font-weight: normal;
+    font-weight: inherit;
+}
+
+.lowercase{
+  text-transform: initial;
 }
 
 .toggle-button{
@@ -491,7 +515,6 @@ a:hover, a:active{
   outline: none;
   box-shadow: none;
   position: relative;
-  display: inline-block;
   float:right;  
   height: 20px;
   font-family: futura-pt-bold, sans-serif;
@@ -512,40 +535,39 @@ a:hover, a:active{
   /* ARCHIVE */
 
   .archive-content{
-    padding-top: 16px;
     padding-bottom: 16px;
   }
 
   .archive-item{
     display: block;
     text-decoration: none;
-    aspect-ratio: 35/22;
-    background-color: grey;
-    font-weight: 700;
+    padding: 0;
+    /* aspect-ratio: 35/22; */
+    /* background-color: grey; */
+    /* font-weight: 700; */
     line-height: 1.5;
-    position: relative;
+    /* position: relative; */
     overflow: hidden;
   }
 
   .archive-item--info-layer{
-    position: absolute;
+    /* position: absolute;
     top:0;
-    left: 0;
+    left: 0; */
     z-index: 1;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     flex-direction: column;
-    backdrop-filter: blur(10px);
-    padding: 15px;
-    background-color: rgba(0,0,0,.1);
+    /* backdrop-filter: blur(10px); */
+    padding: 10px;
+    /* background-color: rgba(0,0,0,.1); */
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
     pointer-events: none;
   }
 
   .archive-item--text{
     flex: 1;
-    color: white;
     z-index: 1;
     /* text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.75); */
   }
@@ -554,14 +576,21 @@ a:hover, a:active{
     padding: 0;
     margin: 0;
     text-transform: uppercase;
+    line-height: 25px;
+    font-size: 16px;
+    font-weight: bold;
   }
 
   .archive-item p{
     padding: 0;
     margin: 0;
+    line-height: 25px;
+    font-size: 16px;
+    font-weight: bold;
   }
 
   .archive-item--cta{
+    display: none;
     background-color: transparent;
     border: 1px solid #FFFFFF;
     border-radius: 5px;
@@ -591,15 +620,18 @@ a:hover, a:active{
 
 
   .archive-item .background-image{
-    position: absolute;
+    /* position: absolute;
     top:0;
     left:0;
     z-index: 0;
     width: 100%;
-    height: 100%;
+    height: 100%; */
+    aspect-ratio: 35/22;
+    width: 100%;
     object-fit: cover;
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
     pointer-events: none;
+    display: block;
     /* filter: blur(5px); */
   }
 
@@ -609,12 +641,17 @@ a:hover, a:active{
   }
 
   .archive-item:hover .archive-item--info-layer{
-    backdrop-filter: blur(0);
+    /* backdrop-filter: blur(0); */
     transition: all 150ms cubic-bezier(0.075, 0.82, 0.165, 1);
   }
-
+/* 
   .archive-item:hover .archive-item--text{
     filter: blur(3px)
+  } */
+
+  .archive-item:hover{
+    background-color: #0000ff;
+    color: white;
   }
 
 
@@ -648,6 +685,10 @@ a:hover, a:active{
     padding-top: 30px;
   }
 
+  .project-popups .box-header{
+    padding-bottom: 1em;
+  }
+
   .project-main details{
     margin-top: 30px;
   }
@@ -668,6 +709,7 @@ a:hover, a:active{
     text-align: left;
     cursor: pointer;
     transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 150ms;
+    font-size: 1em;
   }
 
   .popup-button:hover{
@@ -701,26 +743,24 @@ a:hover, a:active{
   }
 
   .button-title{
-    font-family: 'Futura';
+    font-family: futura-pt, sans-serif;
     font-style: normal;
     font-weight: 700;
-    font-size: 12px;
     line-height: 25px;
     display: block;
   }
 
   .button-times{
-    font-family: 'Futura';
+    font-family: futura-pt, sans-serif;
     font-style: normal;
     font-weight: 500;
-    font-size: 12px;
     line-height: 25px;
     display: block;
   }
 
   .popup-button svg{
     position: absolute;
-    right: 0;
+    right: 15px;
     top:50%;
     transform: translateY(-50%);
   }

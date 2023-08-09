@@ -27,11 +27,12 @@ fetch(archive_url, {mode: 'cors'})
       var element = document.createElement("div");
       element.innerHTML = `
       <a class="archive-item info-item red-shadow box" href="#project" data-index="${index}">
+        <img srcset="${img}" class="background-image" />
         <div class="archive-item--info-layer">
             <div class="archive-item--text">
                 <h3 class="archive-item--title">${title}</h3>
-                <p class="subhead">Curated by ${curator}</p>
-                <p class="subhead">Launched ${from}</p>
+                <p>Curated by ${curator}</p>
+                <p>Launched ${from}</p>
             </div>
             <button class="archive-item--cta">
                 <span class="button-text">View Project</span> 
@@ -40,7 +41,6 @@ fetch(archive_url, {mode: 'cors'})
                 </svg>
             </button>
         </div>
-        <img srcset="${img}" class="background-image" />
       </a>
       `;
       archiveContainer.appendChild(element);
@@ -98,10 +98,7 @@ fetch(archive_url, {mode: 'cors'})
           project_button.classList.add('project-button', 'box', 'bg-white');
           project_button.dataset.slug = item.project;
           project_button.innerHTML = `
-            <span class="button-title">Load '${title}'</span>
-            <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
-            </svg>`;
+            <span class="button-title">Load '${title}'</span>`;
           load.appendChild(project_button)
           project_button.addEventListener("click", function () {
             let slug = this.dataset.slug;
@@ -115,10 +112,7 @@ fetch(archive_url, {mode: 'cors'})
           let project_button = document.createElement('button');
           project_button.classList.add('project-button', 'box', 'bg-white');
           project_button.innerHTML = `
-            <span class="button-title">Unload '${title}'</span>
-            <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
-            </svg>`;
+            <span class="button-title">Unload '${title}'</span>`;
           load.appendChild(project_button)
           project_button.addEventListener("click", function () {
             port.postMessage('unload');
@@ -139,10 +133,9 @@ fetch(archive_url, {mode: 'cors'})
         button.innerHTML = `
             <span class="button-title">${popupTitle}</span>
             <span class="button-times">Day ${popupDay} – ${popupTime}</span>
-            <svg width="60" height="66" viewBox="0 0 60 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M42 32L32 26.2265V37.7735L42 32ZM33 31L19 31V33H33V31Z" fill="#0000FF"/>
+            <svg width="24" height="24" viewBox="0 0 33 33" preserveAspectRatio="xMidYMid meet">
+              <g id="Layer_1-2"><path d="m32,0H12c-.55,0-1,.45-1,1v20c0,.55.45,1,1,1h20c.55,0,1-.45,1-1V1c0-.55-.45-1-1-1Zm-1,20H14.41l5.59-5.59v3.59h2v-6c0-.55-.45-1-1-1h-6v2h3.59l-5.59,5.59V2h18v18Z" fill="blue"/><path d="m20,31H2V13h7v-2H1c-.55,0-1,.45-1,1v20c0,.55.45,1,1,1h20c.55,0,1-.45,1-1v-8h-2v7Z" fill="blue"/></g>
             </svg>
-
         `;
         document.getElementById('popupContainer').appendChild(button);
         button.addEventListener("click", function () {
@@ -192,6 +185,8 @@ fetch(archive_url, {mode: 'cors'})
   function openProjectPage(event){
     const targetId = event.target.href.split('#')[1];
     const targetElement = document.getElementById(targetId);
+    targetElement.classList.add('is-active');
+    targetElement.scrollTo(0,0);
     targetElement.addEventListener('transitionend', () => {
       targetElement.querySelector('.back-button').focus();
     });
