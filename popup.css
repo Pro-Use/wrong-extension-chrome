@@ -101,7 +101,7 @@ header{
     position: absolute;
     top:0;
     left: 0;
-    transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/*    transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);*/
     overflow-y: scroll;
     background-color: #fff;
     display: flex;
@@ -127,6 +127,7 @@ header{
 
 .about--open .about, .archive--open .archive, .project--open .project{
   left: 0;
+  top: 0;
   height: auto;
   transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;
 
@@ -134,7 +135,8 @@ header{
 
 .about--open .info, .archive--open .info, .project--open .info{
   left: -100vw;
-  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;
+  top: 0;
+/*  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;*/
 }
 
 .project--open .archive{
