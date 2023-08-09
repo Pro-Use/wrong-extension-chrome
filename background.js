@@ -73,6 +73,8 @@ chrome.idle.onStateChanged.addListener(function() {
                create_alarms(true);
            } else if (msg === 'close_all'){
                closeAll();
+           } else if (msg == 'keep_alive'){
+            // do nothing
            } else if (msg === 'debug'){
                 await chrome.windows.create({url:'debug.html', type:'popup', left: 0, top: 0, width: 500, height: 500})
            } else if (msg === 'unload') {
