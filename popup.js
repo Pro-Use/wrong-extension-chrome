@@ -25,6 +25,11 @@
       name: "RTC_Comms"
  });
 
+ port.onDisconnect.addListener(()=> {
+    console.log('Service worker innactive')
+    location.relaod()
+})
+
 buttons = document.querySelectorAll('.send');
 
 buttons.forEach(function(currentBtn){
