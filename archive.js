@@ -190,6 +190,8 @@ fetch(archive_url, {mode: 'cors'})
   function openProjectPage(event){
     const targetId = event.target.href.split('#')[1];
     const targetElement = document.getElementById(targetId);
+    targetElement.classList.add('is-active');
+    targetElement.scrollTo(0,0);
     targetElement.addEventListener('transitionend', () => {
       targetElement.querySelector('.back-button').focus();
     });

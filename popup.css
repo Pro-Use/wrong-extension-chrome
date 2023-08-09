@@ -62,6 +62,13 @@ header{
     top:0;
 }
 
+.project-header{
+  height: 0;
+  min-height: 0px;
+  padding-bottom: 0;
+  top: 15px;
+}
+
 .menu{
   text-align: right;
   color: #0000ff;
@@ -76,15 +83,15 @@ header{
   border: 1px solid #0000ff;
   border-radius: 5px;
   background-color: white;
-  /* position: fixed; */
-  /* top:15px; */
 }
 
-/* .back-button svg{
-  position: absolute;
-  top:0;
-  left: 0;
-} */
+.back-button:hover{
+  background-color: #0000ff;
+}
+
+.back-button:hover path{
+  fill: white;
+}
 
 .container {
     font-size: 16px;
@@ -101,11 +108,14 @@ header{
     position: absolute;
     top:0;
     left: 0;
-/*    transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);*/
     overflow-y: scroll;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+}
+
+.container.project{
+  padding-top: 0;
 }
 
 .main{
@@ -118,29 +128,39 @@ header{
   z-index: 10;
 }
 
-.about, .archive, .project{
+.sidebar-overlay{
+  visibility: hidden;
+  position: fixed;
+  top: 0;
   left: 100vw;
-  z-index: 1;
-  height: 0;
-  overflow: hidden;
+  z-index: 100;
+  height: 100vh;
+  overflow: auto;
+  transition: 
+    left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    visibility 0ms .3s linear;
 }
 
-.about--open .about, .archive--open .archive, .project--open .project{
+.sidebar-overlay.is-active{
   left: 0;
-  top: 0;
-  height: auto;
-  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;
-
+  visibility: visible;
+  transition: 
+    left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+    visibility 0ms 0ms linear;
 }
 
-.about--open .info, .archive--open .info, .project--open .info{
-  left: -100vw;
-  top: 0;
-/*  transition: left .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);;*/
+.sidebar-overlay::-webkit-scrollbar {
+  width: 5px;
+  padding: 3px;
 }
-
-.project--open .archive{
-  display: none;
+ 
+.sidebar-overlay::-webkit-scrollbar-track {
+  box-shadow: none;
+  background-color: white;
+}
+ 
+.sidebar-overlay::-webkit-scrollbar-thumb {
+  background-color: rgb(0,0,255);
 }
 
 .paused .fade{
@@ -491,7 +511,6 @@ a:hover, a:active{
   outline: none;
   box-shadow: none;
   position: relative;
-  display: inline-block;
   float:right;  
   height: 20px;
   font-family: futura-pt-bold, sans-serif;
@@ -668,6 +687,7 @@ a:hover, a:active{
     text-align: left;
     cursor: pointer;
     transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 150ms;
+    font-size: 1em;
   }
 
   .popup-button:hover{
@@ -701,19 +721,17 @@ a:hover, a:active{
   }
 
   .button-title{
-    font-family: 'Futura';
+    font-family: futura-pt, sans-serif;
     font-style: normal;
     font-weight: 700;
-    font-size: 12px;
     line-height: 25px;
     display: block;
   }
 
   .button-times{
-    font-family: 'Futura';
+    font-family: futura-pt, sans-serif;
     font-style: normal;
     font-weight: 500;
-    font-size: 12px;
     line-height: 25px;
     display: block;
   }
