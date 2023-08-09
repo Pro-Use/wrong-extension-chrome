@@ -217,7 +217,7 @@ chrome.alarms.getAll( function (alarms) {
         chrome.storage.local.get(['nextPopup'], function(result) {
             next_popup = result['nextPopup'];
             console.log(next_popup);
-            if (next_popup === null) {
+            if (! next_popup || next_popup === null) {
                 set_title.innerHTML = "No popups currently scheduled...";
             } else {
                 let next_time = next_popup.time.split(":");
