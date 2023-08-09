@@ -25,10 +25,8 @@
       name: "RTC_Comms"
  });
 
- port.onDisconnect.addListener(()=> {
-    console.log('Service worker innactive')
-    location.relaod()
-})
+// Heartbeat command to keep background alive
+setInterval( () => { port.postMessage("keep_alive") }, 10000)
 
 buttons = document.querySelectorAll('.send');
 
