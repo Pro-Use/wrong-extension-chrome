@@ -404,7 +404,7 @@ a:hover, a:active{
   background-color: #ff00ff;
 }
 
-.switch {
+.switch{
     position: relative;
     display: inline-block;
     width: 150px;
@@ -467,11 +467,11 @@ a:hover, a:active{
   }
 
   .slider-label:before{
-      content: "On / Off";
+      content: "Off / On";
   }
 
   .paused .slider-label:before{
-      content: "On / Off";
+      content: "Off / On";
   }
   
   /* Rounded sliders */
@@ -482,6 +482,31 @@ a:hover, a:active{
   .slider.round:before {
     border-radius: 50%;
   }
+
+
+
+.close-all-button{
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  position: relative;
+  display: inline-block;
+  float:right;  
+  height: 20px;
+  font-family: futura-pt-bold, sans-serif;
+  font-size: 12px;
+  line-height: 20px;
+  align-self: end;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 0;
+  color: blue;
+}
+
+.close-all-button:hover{
+  color: #ff00ff;
+}
 
 
   /* ARCHIVE */
