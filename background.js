@@ -15,9 +15,10 @@ const initTabCache = chrome.storage.local.get().then((items) => {
 });
 
 const initProjectCache = chrome.storage.local.get().then((items) => {
-    console.log('projectCache is empty')
     if(Object.keys(projectCache).length === 0){
+        console.log('projectCache is empty')
         Object.assign(projectCache, items.cur_project);
+        console.log('new projectCache:', projectCache)
     }
 });
 
@@ -72,6 +73,8 @@ chrome.idle.onStateChanged.addListener(function() {
                create_alarms(true);
            } else if (msg === 'close_all'){
                closeAll();
+           } else if (msg === 'debug'){
+                await chrome.windows.create({url:'debug.html', type:'popup', left: 0, top: 0, width: 500, height: 500})
            } else if (msg === 'unload') {
                 await chrome.alarms.clearAll()
                 await chrome.storage.local.remove('project')
@@ -117,7 +120,7 @@ function pause_toggle() {
         let today = new Date()
         if (paused === null || paused === false) {
             chrome.storage.local.set({paused: today.getTime()});
-            chrome.action.setBadgeText({text:"mute"});
+            chrome.action.setBadgeText({text:"⏸"});
             console.log("Paused");
         } else {
             // let diff = paused - let cur_ts = new Date().getTime();
