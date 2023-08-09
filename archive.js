@@ -92,7 +92,7 @@ fetch(archive_url, {mode: 'cors'})
       `;
       // Append load button if not current project
       let { project } = await chrome.storage.local.get('project');
-      if (project && project.slug != item.project){
+      if (!project || project.slug && project.slug != item.project){
           let load = element.querySelector('#load-button')
           let project_button = document.createElement('button');
           project_button.classList.add('project-button', 'box', 'bg-white');
