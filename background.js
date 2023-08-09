@@ -340,6 +340,17 @@ var create_alarms = async (force=false, refresh=false) => {
         // return if project has been viewed before
         if (result.history && result.history.includes(data.project)){
             console.log('Project has been viewed before, not loading')
+            chrome.storage.local.clear();
+            chrome.storage.local.set({paused: result.paused});
+            chrome.storage.local.set({lastUpdate: data.lastUpdate});
+            chrome.storage.local.set({history: result.history})
+            chrome.alarms.clearAll();
+            // create refresh alarm
+            let alarm_info = {
+                delayInMinutes:5,
+                periodInMinutes:5
+            };
+            chrome.alarms.create('refresh', alarm_info);
             return
         } else {
             store_project(data.project)
