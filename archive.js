@@ -161,25 +161,27 @@ fetch(archive_url, {mode: 'cors'})
             height = parseInt(popup_info.height);
             width = parseInt(popup_info.width);
             dims = []
-            pos_arr = popup_info.position.split("-");
-    //                horizontal
-            if (pos_arr[1] === "left") {
-                left = 0;
-            } else if (pos_arr[1] === "center") {
-                left = parseInt((screen.width-width)/2);
-            } else if (pos_arr[1] === "right"){
-                left = screen.width-width;
+            if (popup_info.fullscreen == 'true'){
+                pos_arr = popup_info.position.split("-");
+        //                horizontal
+                if (pos_arr[1] === "left") {
+                    left = 0;
+                } else if (pos_arr[1] === "center") {
+                    left = parseInt((screen.width-width)/2);
+                } else if (pos_arr[1] === "right"){
+                    left = screen.width-width;
+                }
+        //                vertical
+                if (pos_arr[0] === "top"){
+                     popup_top = 0;
+                } else if (pos_arr[0] === "mid") {
+                     popup_top = screen.availHeight - height;
+                     popup_top = parseInt(popup_top / 2);
+                } else if (pos_arr[0] === "bottom"){
+                     popup_top = screen.height-height;
+                }
+                dims.push(left, popup_top, width, height);
             }
-    //                vertical
-            if (pos_arr[0] === "top"){
-                 popup_top = 0;
-            } else if (pos_arr[0] === "mid") {
-                 popup_top = screen.availHeight - height;
-                 popup_top = parseInt(popup_top / 2);
-            } else if (pos_arr[0] === "bottom"){
-                 popup_top = screen.height-height;
-            }
-            dims.push(left, popup_top, width, height);
             msg = JSON.stringify({dims:dims, fullscreen:(popup_info.fullscreen == 'true'), url:popup_info.url});
             // console.log(msg);
             port.postMessage(msg);
