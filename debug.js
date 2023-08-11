@@ -30,7 +30,7 @@ const get_info = async () => {
   // Examine the text in the response
   let data = await response.json()
   console.log(data)
-  if (result.project.slug){
+  if (result.project && result.project.slug){
 
     let projectCell = document.getElementById('project-cell').innerHTML = result.project.slug
 
