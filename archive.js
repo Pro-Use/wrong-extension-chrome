@@ -60,10 +60,12 @@ fetch(archive_url, {mode: 'cors'})
       } else if (!item.live) {
         archiveContainer.appendChild(element);
       }
-      
-      
       index++;
     });
+    let archiveItems = archiveContainer.querySelectorAll('.archive-item');
+    if (archiveItems.length === 0) {
+      archiveContainer.style.display = 'none';
+    }
   }
 
   archiveContainer.addEventListener('click', (e) => {
@@ -135,13 +137,19 @@ fetch(archive_url, {mode: 'cors'})
           project_button.classList.add('project-button', 'box', 'bg-white');
           project_button.dataset.slug = item.project;
           project_button.innerHTML = `
-            <span class="button-title">Load '${title}'</span>`;
+            <span class="button-title">Load '${title}'</span>
+            <span class="button-loading">Loading...</span>
+            `;
           load.appendChild(project_button)
           project_button.addEventListener("click", function () {
             let slug = this.dataset.slug;
             msg = JSON.stringify({ 'slug': slug })
             port.postMessage(msg);
-            window.close();
+            project_button.classList.add('loading');
+            setTimeout(() => {
+              project_button.classList.remove('loading');
+              window.location.reload();
+            }, 3000);
           });
         }
       // Append unload button if current but not live
@@ -150,11 +158,16 @@ fetch(archive_url, {mode: 'cors'})
           let project_button = document.createElement('button');
           project_button.classList.add('project-button', 'box', 'bg-white');
           project_button.innerHTML = `
-            <span class="button-title">Unload '${title}'</span>`;
+            <span class="button-title">Unload '${title}'</span>
+            <span class="button-loading">Unloading...</span>`;
           load.appendChild(project_button)
           project_button.addEventListener("click", function () {
             port.postMessage('unload');
-            window.close();
+            project_button.classList.add('loading');
+            setTimeout(() => {
+              project_button.classList.remove('loading');
+              window.location.reload();
+            }, 3000);
           });
       }
       //

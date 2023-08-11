@@ -538,6 +538,10 @@ a:hover, a:active{
     padding-bottom: 16px;
   }
 
+  .archive-content .box-header{
+    padding-bottom: 1em;
+  }
+
   .archive-item{
     display: block;
     text-decoration: none;
@@ -677,6 +681,14 @@ a:hover, a:active{
     transform: translateY(-50px);
   }
 
+  .project-info-box details p{
+    padding-bottom: 1em;
+  }
+
+  .project-info-box details p:first-child{
+    padding-top: 1em;
+  }
+
   .bg-white{
     background-color: white;
   }
@@ -733,6 +745,42 @@ a:hover, a:active{
     transition: all cubic-bezier(0.075, 0.82, 0.165, 1) 150ms;
   }
 
+  .project-button .button-loading{
+    display: none;
+  }
+
+  .project-button.loading{
+    pointer-events: none;
+  }
+
+  .project-button.loading .button-loading{
+    cursor: progress;
+    /* background: linear-gradient(45deg, rgba(255,255,255,1) 27%, rgba(255,0,255,1) 50%, rgba(255,255,255,1) 73%); */
+    background-size: 400% 400%;
+    animation: loading 500ms ease-in-out 0s infinite alternate forwards;
+  }
+
+  @keyframes loading {
+    0% {
+      opacity: 0;
+      /* background-position-x: -10%; */
+    }
+    100% {
+      opacity: 1;
+      /* background-position-x: 94%; */
+    }
+  }
+
+  .project-button.loading .button-title{
+    display: none;
+  }
+
+  .project-button.loading .button-loading{
+    display: block;
+    background: transparent;
+    color: #0000ff!important;
+  }
+
   .project-button:hover{
     background-color: blue;
     color: white;
@@ -742,7 +790,7 @@ a:hover, a:active{
     fill: white;
   }
 
-  .button-title{
+  .button-title, .button-loading{
     font-family: futura-pt, sans-serif;
     font-style: normal;
     font-weight: 700;
