@@ -32,8 +32,16 @@ const get_info = async () => {
   console.log(data)
   if (result.project && result.project.slug){
 
-    let projectCell = document.getElementById('project-cell').innerHTML = result.project.slug
+    let projectCell = document.getElementById('project-cell')
+    projectCell.innerHTML = result.project.slug + ' '
 
+    let clear = document.getElementById('clear-button')
+    clear.addEventListener('click', async (e) =>{
+      e.preventDefault()
+      port.postMessage('unload')
+      location.reload()
+    })
+    
     document.getElementById('days-cell').innerHTML = data.days
 
     document.getElementById('cur-days-cell').innerHTML = result.project.day
