@@ -17,7 +17,7 @@ const initTabCache = chrome.storage.local.get().then((items) => {
 const initProjectCache = chrome.storage.local.get().then((items) => {
     if(Object.keys(projectCache).length === 0){
         console.log('projectCache is empty')
-        Object.assign(projectCache, items.cur_project);
+        Object.assign(projectCache, items.project);
         console.log('new projectCache:', projectCache)
     }
 });
