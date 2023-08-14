@@ -149,7 +149,7 @@ fetch(archive_url, {mode: 'cors'})
             setTimeout(() => {
               project_button.classList.remove('loading');
               window.location.reload();
-            }, 3000);
+            }, 1500);
           });
         }
       // Append unload button if current but not live
@@ -167,7 +167,7 @@ fetch(archive_url, {mode: 'cors'})
             setTimeout(() => {
               project_button.classList.remove('loading');
               window.location.reload();
-            }, 3000);
+            }, 1500);
           });
       }
       //
