@@ -5,8 +5,8 @@
  // Heartbeat command to keep background alive
 setInterval( () => { port.postMessage("keep_alive") }, 10000)
 
-// const base_url = "https://plugin.arebyte.com/";
-const base_url = "https://dev.10pm.studio/arebyte-ext/"
+const base_url = "https://plugin.arebyte.com/";
+// const base_url = "https://dev.10pm.studio/arebyte-ext/"
 // const base_url = "http://localhost/wrong/"
 
 // get existing storage

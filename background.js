@@ -2,8 +2,8 @@
 const tabCache = [];
 const projectCache = {};
 const historyCache = []
-// const base_url = "https://plugin.arebyte.com/";
-const base_url = "https://dev.10pm.studio/arebyte-ext/"
+const base_url = "https://plugin.arebyte.com/";
+// const base_url = "https://dev.10pm.studio/arebyte-ext/"
 // const base_url = "http://localhost/wrong/"
 
 // init local cache for when service worker reloads

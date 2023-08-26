@@ -4,8 +4,8 @@ const projectContainer = document.getElementById('projectContainer');
 let archiveData;
 let allPopups = {};
 
-let archive_url = "https://dev.10pm.studio/arebyte-ext/archive.json"
-// let archive_url = 'https://plugin.arebyte.com/archive.json'
+// let archive_url = "https://dev.10pm.studio/arebyte-ext/archive.json"
+let archive_url = 'https://plugin.arebyte.com/archive.json'
 // let archive_url =  "http://localhost/wrong/archive.json"
 fetch(archive_url, {mode: 'cors'})
   .then(response => response.json())
